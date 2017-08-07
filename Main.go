@@ -3,12 +3,13 @@ package main
 import (
 
 	"fmt"
-	//"strings"
+	"github.com/meritos/go-study/strings"
 )
 
 
 func main () {
 
-	fmt.Println("Hello World")
-	//strings.CountWord2("Hello World")
+	out := strings.CountWord("Hello World")
+
+	fmt.Println("Hello World: ", out)
 }

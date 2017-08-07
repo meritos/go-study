@@ -15,9 +15,9 @@ func cheet(){
 /**
  * CountWord2(in string) string
  *
- *    ...
+ *		...
  */
-func CountWord2(in string) string {
+func CountWord(in string) string {
 
 	in = strings.Trim(in, " ")
 
@@ -25,7 +25,7 @@ func CountWord2(in string) string {
 	result := make([]byte, len(in) + calcAddition(in))
 
 
- 	copyIdx := 0;
+	copyIdx := 0;
 	for _, word := range words {
 
 		// *** ver 1 ***
@@ -66,7 +66,7 @@ func calcAddition(in string) int {
 		bufferSizeAdd := 0;
 		wordLenCount  := 0;
 		for idx, elem := range in {
-    
+
 			if elem == 32 || idx == len(in) - 1 {
 
 				bufferSizeAdd++
@@ -85,6 +85,6 @@ func calcAddition(in string) int {
 			wordLenCount++
 		}
 
-		return bufferSizeAdd;	
+		return bufferSizeAdd;
 }
 

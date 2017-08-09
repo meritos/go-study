@@ -7,10 +7,10 @@ import (
 )
 
 
-func TestCountWord2_1(t *testing.T){
+func TestCountWord_1(t *testing.T){
 
 	expected := "Hello5 World5 Count5 My2 Words5 Long4 words5 also4 like4 Ronaldinhioooo14"
-	out := CountWord2("Hello World Count My Words Long words also like Ronaldinhioooo")
+	out := CountWord("Hello World Count My Words Long words also like Ronaldinhioooo")
 
 	if out != expected {
 
@@ -20,10 +20,10 @@ func TestCountWord2_1(t *testing.T){
 
 
 
-func TestCountWord2_2(t *testing.T){
+func TestCountWord_2(t *testing.T){
 
 	expected := ""
-	out := CountWord2("")
+	out := CountWord("")
 
 	if out != expected {
 
@@ -31,10 +31,10 @@ func TestCountWord2_2(t *testing.T){
 	} 
 }
 
-func TestCountWord2_3(t *testing.T){
+func TestCountWord_3(t *testing.T){
 
 	expected := "oneWord7"
-	out := CountWord2("oneWord")
+	out := CountWord("oneWord")
 
 	if out != expected {
 
@@ -42,10 +42,10 @@ func TestCountWord2_3(t *testing.T){
 	} 
 }
 
-func TestCountWord2_4(t *testing.T){
+func TestCountWord_4(t *testing.T){
 
 	expected := "Ronaldinhioooo14"
-	out := CountWord2("Ronaldinhioooo")
+	out := CountWord("Ronaldinhioooo")
 
 	if out != expected {
 
@@ -54,13 +54,13 @@ func TestCountWord2_4(t *testing.T){
 }
 
 
-func BenchmarkCountWord2_4(b *testing.B){
+func BenchmarkCountWord_4(b *testing.B){
 
 	b.ReportAllocs()
 
 	for i:=0; i < 1000000; i++ {
 
-		CountWord2("Hello World Count My Words Long words also like Ronaldinhioooo ")
+		CountWord("Hello World Count My Words Long words also like Ronaldinhioooo ")
 	}
 
 

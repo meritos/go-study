@@ -3,6 +3,7 @@ package asm
 import (
 	"testing"
 	"fmt"
+	"math/rand"
 )
 
 
@@ -19,6 +20,20 @@ func TestAsmGames(t *testing.T) {
 	fmt.Printf("\n %d, \n END\n", z)
 }
 
+func TestBubleSort(t *testing.T){
+
+	randV := rand.Perm(1000)
+	bigV := make([]int64, 1000) 
+
+	for i, e := range randV {
+		bigV[i] = int64(e)
+	}
+
+	// v := []int64 {8, 2, 6, 9, 5, 4, 3, 2, 1}
+
+	BubleSort(bigV)
+	fmt.Printf("\n\n%v\n\n", bigV);
+}
 
 func TestCPUCycles(t *testing.T){
 

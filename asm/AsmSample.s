@@ -261,3 +261,57 @@ loop:
 end:
 	MOVW R10, ret+24(FP)
 	RET
+
+// 
+// func BubleSort(v []int64)  
+//
+
+/*todo: remove the stack $320 once done*/
+TEXT ·BubleSort(SB), NOSPLIT, $320-16
+
+	/*todo: remove once done no far CALLs*/
+	NO_LOCAL_POINTERS	
+
+	/*todo input validation*/
+
+	MOVQ v_len+8(FP), R9
+	MOVQ v_base+0(FP), R8
+
+	swapped_run_again:
+		
+		MOVQ $0, R15 // R15 will indicatae the swap 
+		MOVQ R8, R11 // R11 will be the loop counter
+		
+		MOVQ R9, R12 // R12 will be the end loop marker
+		SHLQ $3, R12 // lenght * 8 (sizeof(int64))
+		ADDQ R8, R12 // add the array start
+		SUBQ $8, R12 // finish on the len-1 element
+
+	loop: 
+
+		// check for swap
+		// compare (R11), (R11)(8)
+		// if (R11) is greater swap 
+		MOVQ  (R11), R13
+		MOVQ 8(R11), R14
+		CMPQ R13, R14
+		JLE  no_swap
+
+		// Swap part
+		MOVQ $1,  R15 // Flag the swap happened
+		MOVQ R13, 8(R11)
+		MOVQ R14,  (R11)
+
+
+	no_swap:
+
+		ADDQ $8, R11 // Increment by sizeof(int64)
+		CMPQ R11, R12
+		JNE loop
+
+		CMPQ R15, $0
+		JNZ swapped_run_again
+
+
+	RET
+

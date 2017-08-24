@@ -30,6 +30,8 @@ func AsmGames(x, y int64) int64
 
 func Add(x, y int64) int64
 func Sum(v []int16) int16
+func BubleSort(v []int64)  
+
 func StartTSCMeasure() int64
 func StopTSCMeasure() int64
 

@@ -33,16 +33,6 @@ func Sum(v []int16) int16
 func StartTSCMeasure() int64
 func StopTSCMeasure() int64
 
-func DebugInfo(x int64, y int64, z int64, v int64){
-
-	fmt.Printf("\n  0x%x \n", x)
-	fmt.Printf("\n  %x \n"  , y)
-	fmt.Printf("\n  %x \n"  , z)
-	fmt.Printf("\n  %x \n\n", v)
-
-	PrintMem(x, 10)
-
-}
 
 func PrintVal(val int64){
 	fmt.Printf("\n val: 0x%016x | %10d | %064b |\n", val, val, val)
@@ -63,13 +53,9 @@ func PrintDif(val1, val2 int64){
 //
 func PrintFlags(flags int64){
 
-	PrintVal(flags)
-
-	fmt.Printf("\n\n val:  %d  \n \n", 2<<10)
-
 	fmt.Println();
-	fmt.Printf("[ 0] CF - %d\n", flag(flags & 0))
-	fmt.Printf("[ 1]    - %d\n", flag(flags & 1))
+	fmt.Printf("[ 0] CF - %d\n", flag(flags & 1))
+	fmt.Printf("[ 1]    - %d\n", flag(flags & 2))
 	fmt.Printf("[ 2] PF - %d\n", flag(flags & (2<<1)    ))
 	fmt.Printf("[ 3]    - %d\n", flag(flags & (2<<2)    ))
 	fmt.Printf("[ 4] AF - %d\n", flag(flags & (2<<3)    ))
@@ -105,7 +91,7 @@ func flag(f int64) byte{
 
 func PrintMem(addr int64, size int){
 
-	fmt.Printf("    === Memory From: [ 0x%x ] Size: [ %d x 8 bytes ] === \n", addr, size)
+	fmt.Printf("\n\n    === Memory From: [ 0x%x ] Size: [ %d x 8 bytes ] === \n", addr, size)
 
 	for i := 0; i < 20; i=i+2{
 

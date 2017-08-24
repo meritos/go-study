@@ -16,7 +16,7 @@ func TestAsmGames(t *testing.T) {
 	// z := Sum(vector1)
 
 	//fmt.Printf("\n\n\n  End Run ::: %d \n", z)
-	fmt.Printf("\nEND\n", z)
+	fmt.Printf("\n %d, \n END\n", z)
 }
 
 

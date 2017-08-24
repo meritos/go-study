@@ -1,39 +1,105 @@
 
+
 // TODO: study memory dumps
-// TODO: study DATA for arrays
-// TODO: study flags
+// TODO: study DATA for arrays 
+// TODO: study func address and memory 
 
 
 #include "textflag.h"
 #include "funcdata.h"
 
 //
+// Local static array of ints 
+//
+DATA intArray<>+0x00(SB)/8, $0
+DATA intArray<>+0x08(SB)/8, $1
+DATA intArray<>+0x10(SB)/8, $2
+DATA intArray<>+0x18(SB)/8, $3
+DATA intArray<>+0x20(SB)/8, $4
+DATA intArray<>+0x28(SB)/8, $5
+DATA intArray<>+0x30(SB)/8, $6
+DATA intArray<>+0x38(SB)/8, $7
+DATA intArray<>+0x40(SB)/8, $8
+GLOBL intArray<>(SB), (RODATA | NOPTR), $0x48
+
+
+DATA intArray2+0x00(SB)/8, $0xFF
+DATA intArray2+0x08(SB)/8, $0xEE
+DATA intArray2+0x10(SB)/8, $0xDD
+DATA intArray2+0x18(SB)/8, $3
+DATA intArray2+0x20(SB)/8, $4
+DATA intArray2+0x28(SB)/8, $5
+DATA intArray2+0x30(SB)/8, $6
+DATA intArray2+0x38(SB)/8, $7
+DATA intArray2+0x40(SB)/8, $8
+GLOBL intArray2(SB), (RODATA | NOPTR), $0x48
+
+//
 // Define: TEXT ·Add(SB), [$stack_size-arg_size] 
 // 
 // Stack size defined: 
-//  (!) ... todo: acording vars you use or args you pass to calls 
+//    $320 - to be able to play with bunch of params
+//           without breaking anything, practice 
+//           for samples only  
 //
 // Arguments defined as 24 bytes
 //   x, y => 0-16  : 2 int64
 //   ret  => 16-24  : 1 int64
 TEXT ·AsmGames(SB), NOSPLIT|NOFRAME, $320-24
 	
+
 	// If you have intention to 
 	// do calls from this ASM code
 	// you better use this makro, 
 	// for more info: https://golang.org/doc/asm#runtime
 	NO_LOCAL_POINTERS	
 
-	
+
+	BYTE $0x90
+
+	BYTE $0x91
+	BYTE $0x91
+	BYTE $0x91
+	BYTE $0x91
+
+	BYTE $0x90
+	BYTE $0x90
+	BYTE $0x90
+	BYTE $0x90
+
+	MOVQ	$20, R9
+	MOVQ	R9, 0(SP)
+	CALL ·PrintVal(SB)
+
+
+	// Example of 
+    PUSHFQ
+    POPQ    R9
+	MOVQ	R9,    0(SP)
+	CALL    ·PrintFlags(SB)
+
+
+	LEAQ intArray<>(SB), DX
 	// Init args for the CALL
 	// make CALL with the args 
-	MOVQ	SP,    0(SP)
-	MOVQ    $1,    8(SP)
-	MOVQ    $1,   16(SP)
-	MOVQ    $1,   24(SP)
-	CALL    ·DebugInfo(SB)
-	// check what (TLS) contains
-    //CALL ·PrintStack+0(SB)
+	MOVQ	DX,    0(SP)
+	MOVQ    $10,    8(SP)
+	CALL    ·PrintMem(SB)
+
+	LEAQ intArray2(SB), DX
+	// Init args for the CALL
+	// make CALL with the args 
+	MOVQ	DX,    0(SP)
+	MOVQ    $10,    8(SP)
+	CALL    ·PrintMem(SB)
+
+	LEAQ ·AsmGames(SB), DX
+	// Init args for the CALL
+	// make CALL with the args 
+	MOVQ	DX,    0(SP)
+	MOVQ    $10,    8(SP)
+	CALL    ·PrintMem(SB)
+	
 
     // Example of printing value
     MOVQ $125, R8
@@ -93,11 +159,6 @@ JNZ loop
 
 
 
-	// Example of 
-    PUSHFQ
-    POPQ R9
-	MOVQ	R9,    0(SP)
-	CALL    ·PrintFlags(SB)
 
 
 	// * Actual x+y function *

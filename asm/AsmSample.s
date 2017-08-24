@@ -263,19 +263,27 @@ end:
 	RET
 
 // 
-// func BubleSort(v []int64)  
+// func BubbleSort(v []int64)  
 //
+//  The function will recive unsorted 
+//  array of uint64 and sort it using 
+//  bubble sort algorithm
+// 
+// Stack size defined: $0 
+//
+// Arguments defined as 16 bytes
+//   vector address => 0-8  : 1 int64
+//   vector length  => 8-16  : 1 int64
+//
+TEXT ·BubbleSortAsm(SB), NOSPLIT, $0-16
 
-/*todo: remove the stack $320 once done*/
-TEXT ·BubleSort(SB), NOSPLIT, $320-16
-
-	/*todo: remove once done no far CALLs*/
-	NO_LOCAL_POINTERS	
-
-	/*todo input validation*/
-
-	MOVQ v_len+8(FP), R9
+	// Load arguments
 	MOVQ v_base+0(FP), R8
+	MOVQ v_len+8(FP), R9
+
+	// input validation
+	CMPQ R9, $1
+	JLE  not_valid_input 	
 
 	swapped_run_again:
 		
@@ -295,14 +303,12 @@ TEXT ·BubleSort(SB), NOSPLIT, $320-16
 		MOVQ  (R11), R13
 		MOVQ 8(R11), R14
 		CMPQ R13, R14
-		JLE  no_swap
+		JLE  no_swap 
 
 		// Swap part
 		MOVQ $1,  R15 // Flag the swap happened
 		MOVQ R13, 8(R11)
 		MOVQ R14,  (R11)
-
-
 	no_swap:
 
 		ADDQ $8, R11 // Increment by sizeof(int64)
@@ -312,6 +318,7 @@ TEXT ·BubleSort(SB), NOSPLIT, $320-16
 		CMPQ R15, $0
 		JNZ swapped_run_again
 
-
+	not_valid_input:
+		
 	RET
 

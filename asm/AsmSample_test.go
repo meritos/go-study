@@ -20,10 +20,12 @@ func TestAsmGames(t *testing.T) {
 	fmt.Printf("\n %d, \n END\n", z)
 }
 
-func TestBubleSort(t *testing.T){
+func TestBubbleSort(t *testing.T){
 
-	randV := rand.Perm(1000)
-	bigV := make([]int64, 1000) 
+	const VECOTR_SIZE = 30000
+
+	randV := rand.Perm(VECOTR_SIZE)
+	bigV := make([]int64, VECOTR_SIZE) 
 
 	for i, e := range randV {
 		bigV[i] = int64(e)
@@ -31,8 +33,19 @@ func TestBubleSort(t *testing.T){
 
 	// v := []int64 {8, 2, 6, 9, 5, 4, 3, 2, 1}
 
-	BubleSort(bigV)
+	
+	a := StartTSCMeasure()
+
+	// Benchmark partt
+
+	// BubbleSort(bigV) // 30000 => ~2s // cycles: 5941599233
+	BubbleSortAsm(bigV) // 30000 => ~1.9s // cycles: 4919543742
+
+	b := StopTSCMeasure() 
+
 	fmt.Printf("\n\n%v\n\n", bigV);
+	fmt.Printf("\n cycles: %d \n", b-a)
+
 }
 
 func TestCPUCycles(t *testing.T){

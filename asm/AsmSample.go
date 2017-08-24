@@ -30,7 +30,7 @@ func AsmGames(x, y int64) int64
 
 func Add(x, y int64) int64
 func Sum(v []int16) int16
-func BubleSort(v []int64)  
+func BubbleSortAsm(v []int64)  
 
 func StartTSCMeasure() int64
 func StopTSCMeasure() int64
@@ -138,6 +138,25 @@ func nice(c byte) byte{
 
 
 
+func swap(arrayzor []int64, i, j int64) {
+	tmp := arrayzor[j]
+	arrayzor[j] = arrayzor[i]
+	arrayzor[i] = tmp
+}
 
+func BubbleSort(arrayzor []int64) {
+
+	swapped := true;
+	for swapped {
+		swapped = false
+		var i int64
+		for i = 0; i < int64(len(arrayzor)) - 1; i++ {
+			if arrayzor[i + 1] < arrayzor[i] {
+				swap(arrayzor, i, i + 1)
+				swapped = true
+			}
+		}
+	}	
+}
 
 

@@ -50,7 +50,9 @@ There is very useful ASM instruction that can upgrade any performance benchmarki
   
 ## Reference
 [1]: [Github repository for my ASM games](https://github.com/meritos/go-study/tree/master/asm)
+
 [2]: [Helpful post](https://blog.sgmansfield.com/2017/04/a-foray-into-go-assembly-programming/)
+
 [3]: [RDTSC reference](http://x86.renejeschke.de/html/file_module_x86_id_278.html)
 
 

@@ -28,7 +28,7 @@ TEXT ·Add(SB), NOSPLIT, $0-24
     RET
 ```
 
-We can see that function body is defined in the regular *.go file, and the body is implemented in the *.s file which will be compiled and linked by the regular Go compiler, no need for new tools. The strange `·` - middle dot in front of the function name is actually a package delimiter, so you can add package path to the signature. `NOSPLIT` - is directive on memory management which I will not explain here but you can study more about that here: [...](...). `$0-24` in the function is `$stack_size-arguments_size` in bytes. Here you we can see that no stack allocation being used and 24 bytes is used for params: x,y: int64 = 8 bytes and ret_val: int64 = 8 bytes. You can do absolutely anything you want in assembly but I will stop here just to set the stage for the tracing model .You can study more about Assembly basic in that useful blog post: [2](blog-1.md#2-helpful-post)  
+We can see that function body is defined in the regular *.go file, and the body is implemented in the *.s file which will be compiled and linked by the regular Go compiler, no need for new tools. The strange `·` - middle dot in front of the function name is actually a package delimiter, so you can add package path to the signature. `NOSPLIT` - is directive on memory management which I will not explain here but you can study more about that here: [...](...). `$0-24` in the function is `$stack_size-arguments_size` in bytes. Here you we can see that no stack allocation being used and 24 bytes is used for params: x,y: int64 = 8 bytes and ret_val: int64 = 8 bytes. You can do absolutely anything you want in assembly but I will stop here just to set the stage for the tracing model .You can study more about Assembly basic in that useful blog post: [[2]](blog-1.md#2-helpful-post)  
 
 ## How to call back to go methods  
 So far we had studied how to make methods totally implemented in Asm language. But Asm is as cool as it is, also is a very close to machine language and that
@@ -91,7 +91,7 @@ GLOBL intArray<>(SB), (RODATA | NOPTR), $0x48
 ```
 
 The output will be something like: 
-(!) todo: picture of the memory call.
+[![intArrya Memory Dump](http://i.imgur.com/By9OSLKg.png)]
 
 The interesting thing I studied is that you can turn any address saved as `int` into a pointer using that syntax: 
 

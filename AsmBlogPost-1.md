@@ -32,7 +32,7 @@ We can see that function body is defined in the regular *.go file, and the body 
 
 ...
 
-You can study more about Assembly basic in that [post](./AsmBlogPost-1)  
+You can study more about Assembly basic in that [post](AsmBlogPost-1.md#1-github-repository-for-my-asm-games)  
 
 
 ## How to call back to go methods => `NO_LOCAL_POINTERS`

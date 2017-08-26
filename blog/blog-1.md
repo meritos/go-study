@@ -48,30 +48,57 @@ TEXT ·Add(SB), NOSPLIT, $8-24
     RET
 ```
 
-## Methods I wrote to trace go values 
+## Functions I sketched to trace Assembly values 
 I had developed 3 Go functions that helps me to trace what is going on with the code: `PrintVal(val)`, `PrintFlags(FlagsReg)`, `PrintMemory(address, size)`. Lets see how this three will help us. 
 
-  * `PrintVal(val)` - 
+  * `PrintVal(val)` - Any value can be dumped with that function, and because in Asm we usually want to make bitwise operations - also add some clear representation of the value in hex and in binary. Here is how it works: 
+
+```c
+    
+    // Send argument through the stack
+    MOVQ    $20, 0(SP)
+    CALL ·PrintVal(SB)
+```
+
+ The output will look like that: 
+
+ (!) todo: crop screen for PrintVal 
   
 
   * `PrintFlags(FlagsReg)` - 
-  
+The flags register is the fundamental method to control program flow in Asm. We can use `PUSHFQ` to access all of it and later send it to `·PrintFlags` to
+print the translation of it. Here is the simple syntax for that: 
+ 
+```c
+    
+    // Access flag reg
+    PUSHFQ
+
+    // Set glag reg as argument 
+    POPQ    R9
+    MOVQ    R9,    0(SP)
+
+    // Make the function call 
+    CALL    ·PrintFlags(SB)
+```
+
+(!) todo: insert the terminal output
 
   * `PrintMemory(address, size)` - The most tricky function, it will print for us full blocks of memory and ensure that our memory manipulation is correct. 
   to try it lets define a local array of `int64`: that is how we do it in Asm: 
 
 ```c
-DATA intArray<>+0x00(SB)/8, $0
-DATA intArray<>+0x08(SB)/8, $1
-DATA intArray<>+0x10(SB)/8, $2
-DATA intArray<>+0x18(SB)/8, $3
-DATA intArray<>+0x20(SB)/8, $4
-DATA intArray<>+0x28(SB)/8, $5
-DATA intArray<>+0x30(SB)/8, $6
-DATA intArray<>+0x38(SB)/8, $7
-DATA intArray<>+0x40(SB)/8, $8
-GLOBL intArray<>(SB), (RODATA | NOPTR), $0x48
-```
+    DATA intArray<>+0x00(SB)/8, $0
+    DATA intArray<>+0x08(SB)/8, $1
+    DATA intArray<>+0x10(SB)/8, $2
+    DATA intArray<>+0x18(SB)/8, $3
+    DATA intArray<>+0x20(SB)/8, $4
+    DATA intArray<>+0x28(SB)/8, $5
+    DATA intArray<>+0x30(SB)/8, $6
+    DATA intArray<>+0x38(SB)/8, $7
+    DATA intArray<>+0x40(SB)/8, $8
+    GLOBL intArray<>(SB), (RODATA | NOPTR), $0x48
+    ```
 
   Here is how to print the real memory that is allocated for that array: 
 
@@ -90,12 +117,22 @@ GLOBL intArray<>(SB), (RODATA | NOPTR), $0x48
     CALL    ·PrintMem(SB)
 ```
 
-The output will be something like: 
-[![intArrya Memory Dump](http://i.imgur.com/By9OSLKg.png)]
+The output will be something like that: 
+
+![intArrya Memory Dump](http://i.imgur.com/By9OSLKg.png)
+
+We can clearly see the values 01..08 that we set in the init part of  the 
+`intArray`
+
+
+(!) todo: Print memory of the function address...
+
 
 The interesting thing I studied is that you can turn any address saved as `int` into a pointer using that syntax: 
 
-`ptr := (*uint64)(unsafe.Pointer(uintptr(addr + int64(i * 8) )))`
+```go 
+    ptr := (*uint64)(unsafe.Pointer(uintptr(addr + int64(i * 8) )))
+```
 
 Obviously you don't want to have anything like this in a production code , but for tracing at developing it should be fine.
 
@@ -111,6 +148,6 @@ There is very useful ASM instruction that can upgrade any performance benchmarki
 ## Reference
 ###### [1]: [Github repository for my ASM games](https://github.com/meritos/go-study/tree/master/asm)
 ###### [2]: [Helpful post](https://blog.sgmansfield.com/2017/04/a-foray-into-go-assembly-programming/)
-###### [3]: [RDTSC reference](http://x86.renejeschke.de/html/file_module_x86_id_278.html)
-
+###### [3]: [Helpful post 2](https://goroutines.com/asm)
+###### [4]: [RDTSC reference](http://x86.renejeschke.de/html/file_module_x86_id_278.html)
 

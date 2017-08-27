@@ -4,8 +4,6 @@
 # Golang: How to trace embedded Assembly modules?
 
 
-Plan: 
-
 It was great discovery for me to find out that Golang can have direct calls to 
 Assembly modules. Assembly programming gives you that feeling that you can make a program to be ultra optimized and every programmer like to have that power on tips of his fingers
 
@@ -28,9 +26,9 @@ TEXT ·Add(SB), NOSPLIT, $0-24
     RET
 ```
 
-We can see that function body is defined in the regular *.go file, and the body is implemented in the *.s file which will be compiled and linked by the regular Go compiler, no need for new tools. The strange `·` - middle dot in front of the function name is actually a package delimiter, so you can add package path to the signature. `NOSPLIT` - is directive on memory management which I will not explain here but you can study more about that here: [...](...). `$0-24` in the function is `$stack_size-arguments_size` in bytes. Here you we can see that no stack allocation being used and 24 bytes is used for params: x,y: int64 = 8 bytes and ret_val: int64 = 8 bytes. You can do absolutely anything you want in assembly but I will stop here just to set the stage for the tracing model .You can study more about Assembly basic in that useful blog post: [[2]](blog-1.md#2-helpful-post)  
+We can see that function body is defined in the regular *.go file, and the body is implemented in the *.s file which will be compiled and linked by the regular Go compiler, no need for new tools. The strange `·` - middle dot in front of the function name is actually a package delimiter, so you can add package path to the signature. `NOSPLIT` - is directive on memory management which I will not explain here but you can study more about that here: [...](...). `$0-24` in the function is `$stack_size-arguments_size` in bytes. Here you we can see that no stack allocation being used and 24 bytes is used for params: x,y: int64 = 8 bytes and ret_val: int64 = 8 bytes. You can do absolutely anything you want in assembly but I will stop here just to set the stage for the tracing model .You can study more about Assembly basic in that 2 useful blog posts: [[2]](blog-1.md#2-helpful-post), [[3]](blog-1.md#2-helpful-post-2)  
 
-## How to call back to go methods  
+## How to call back to Go methods  
 So far we had studied how to make methods totally implemented in Asm language. But Asm is as cool as it is, also is a very close to machine language and that
 requires very good tools to develop any algorithm. Fortunately we have option to call regular go code form Asm and that will give us the required setup to make very strong tracing for the development use.
 
@@ -74,7 +72,7 @@ print the translation of it. Here is the simple syntax for that:
     // Access flag reg
     PUSHFQ
 
-    // Set glag reg as argument 
+    // Set flag reg as argument 
     POPQ    R9
     MOVQ    R9,    0(SP)
 
@@ -82,7 +80,34 @@ print the translation of it. Here is the simple syntax for that:
     CALL    ·PrintFlags(SB)
 ```
 
-(!) todo: insert the terminal output
+The output looks like that: 
+![Flag Register Dump](http://i.imgur.com/V5fE7pz.png)
+
+Lets see if it works: 
+
+```c
+
+    // Shift right 1 bit
+    // should cause CF flag rise
+    MOVQ $1, R8
+    SHRQ $1, R8
+
+    // Access flag reg
+    PUSHFQ
+
+    // Set flag reg as argument 
+    POPQ    R9
+    MOVQ    R9,    0(SP)
+
+    // Make the function call 
+    CALL    ·PrintFlags(SB)
+```
+
+The output looks like that: 
+![Flag Register Dump](http://i.imgur.com/ZAT6ghE.png)
+
+The CF flag is on now cause the bit was shifted there.
+
 
   * `PrintMemory(address, size)` - The most tricky function, it will print for us full blocks of memory and ensure that our memory manipulation is correct. 
   to try it lets define a local array of `int64`: that is how we do it in Asm: 
@@ -98,7 +123,7 @@ print the translation of it. Here is the simple syntax for that:
     DATA intArray<>+0x38(SB)/8, $7
     DATA intArray<>+0x40(SB)/8, $8
     GLOBL intArray<>(SB), (RODATA | NOPTR), $0x48
-    ```
+```
 
   Here is how to print the real memory that is allocated for that array: 
 
@@ -140,9 +165,12 @@ Obviously you don't want to have anything like this in a production code , but f
 ## Finish with measuring cycles
 There is very useful ASM instruction that can upgrade any performance benchmarking strategy. I am talking about: `RDTSC` -Read Time-Stamp Counter which gives you the actual CPU cycles counter. 
 ...
+
+
+
 ## To remember: 
-  * After the call to a function the registers can be reset
-  * To remove unnecessary directives 
+  * After the call to a Go function from Asm code the registers will be reset to a garbage value. To manage it you will better save them on the stack.
+  * To remove unnecessary directives (!) todo: ....
   * To run my sample you can use: (!) todo: ...
   
 ## Reference

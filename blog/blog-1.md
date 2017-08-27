@@ -60,8 +60,9 @@ I had developed 3 Go functions that helps me to trace what is going on with the 
 
  The output will look like that: 
 
- (!) todo: crop screen for PrintVal 
-  
+![Value Dump](http://i.imgur.com/WpEutRa.png)
+
+That way you can show any value at any stage. We should remember that the call for the `PrintVal()` changes values of registers, so at least in the developing stage, the values should be saved on the stack.
 
   * `PrintFlags(FlagsReg)` - 
 The flags register is the fundamental method to control program flow in Asm. We can use `PUSHFQ` to access all of it and later send it to `·PrintFlags` to
@@ -80,7 +81,8 @@ print the translation of it. Here is the simple syntax for that:
     CALL    ·PrintFlags(SB)
 ```
 
-The output looks like that: 
+The output looks like that:
+
 ![Flag Register Dump](http://i.imgur.com/V5fE7pz.png)
 
 Lets see if it works: 
@@ -104,6 +106,7 @@ Lets see if it works:
 ```
 
 The output looks like that: 
+
 ![Flag Register Dump](http://i.imgur.com/ZAT6ghE.png)
 
 The CF flag is on now cause the bit was shifted there.
@@ -146,8 +149,7 @@ The output will be something like that:
 
 ![intArrya Memory Dump](http://i.imgur.com/By9OSLKg.png)
 
-We can clearly see the values 01..08 that we set in the init part of  the 
-`intArray`
+We can clearly see the values `01..08` that we set in the initialize part of  the `intArray`
 
 
 (!) todo: Print memory of the function address...

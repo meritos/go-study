@@ -149,11 +149,45 @@ The output will be something like that:
 
 ![intArrya Memory Dump](http://i.imgur.com/By9OSLKg.png)
 
-We can clearly see the values `01..08` that we set in the initialize part of  the `intArray`
+We can clearly see the values `01..08` that we set in the initialize part of  the `intArray`.
+
+We can do something even more fun: let's analyze the memory representation of a code function, but before let's place code block that will help us to identify that we are printing the right memory segment: 
+
+```c
+    BYTE $0x90
+
+    BYTE $0x91
+    BYTE $0x91
+    BYTE $0x91
+    BYTE $0x91
+
+    BYTE $0x90
+    BYTE $0x90
+    BYTE $0x90
+    BYTE $0x90
+```
+
+This values do absolutely nothing for the algorithmic part, but they will be saved in the memory aside all the other instructions.
+
+Now for the dump: 
+
+```c
+    // Load address of the function
+    LEAQ ·AsmGames(SB), DX
+
+    // Init args for the CALL
+    // make CALL with the args 
+    MOVQ    DX,    0(SP)
+    MOVQ    $10,    8(SP)
+    CALL    ·PrintMem(SB)
+```
+
+The output should look like this: 
+
+![AsmGames memory dump](http://i.imgur.com/hvHk3YI.png)
 
 
-(!) todo: Print memory of the function address...
-
+The fictive data: `0x90` and `0x91` are clearly shown in the dump. 
 
 The interesting thing I studied is that you can turn any address saved as `int` into a pointer using that syntax: 
 
